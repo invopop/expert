@@ -1,0 +1,21 @@
+# Invopop Expert Configuration
+llm:
+  provider: "openai"
+  model: "gpt-4.1"
+  temperature: 0.1
+
+mcp:
+  servers:
+    invopop:
+      command: "node"
+      args: ["~/.mcp/invopop/src/index.js"]
+      transport: "stdio"
+    gobl:
+      command: "node" 
+      args: ["~/.mcp/gobl/src/index.js"]
+      transport: "stdio"
+
+chat:
+  welcome_message: "Welcome to Invopop Expert! Ask questions about GOBL and Invopop (type 'exit' to quit)"
+  input_prompt: "Enter your multi-line question. Press Enter on an empty line to send."
+  max_history: 50

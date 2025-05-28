@@ -1,0 +1,25 @@
+[project]
+name = "expert"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "dotenv>=0.9.9",
+    "langchain>=0.3.25",
+    "langchain-mcp-adapters>=0.1.1",
+    "langchain-openai>=0.3.18",
+    "langgraph>=0.4.7",
+    "langgraph-prebuilt>=0.2.2",
+]
+
+[project.scripts]
+expert = "expert.main:cli"
+
+[tool.ruff]
+line-length = 88
+target-version = "py313"
+
+[tool.black]
+line-length = 88
+target-version = ['py313']

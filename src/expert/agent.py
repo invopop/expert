@@ -96,10 +96,12 @@ class InvopopExpert:
                             elif func_name == "gobl_search":
                                 print(
                                     "🔍 Searching GOBL docs:",
-                                    tool_call["function"]["arguments"],
-                                )
+                                   tool_call["function"]["arguments"],
+                               )
+                    # Update the final message content
+                    final_message_content = message.content
 
-        return message.content if "message" in locals() else ""
+        return final_message_content
 
     async def chat_loop(self):
         """Run an interactive chat loop."""

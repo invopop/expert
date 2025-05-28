@@ -6,9 +6,9 @@ An AI agent that helps you with Invopop and GOBL (Go Business Language) document
 
 ### Prerequisites
 
-- Python 3.13+
 - Node.js (for MCP servers)
 - OpenAI API key
+- uv package manager (you can install it with pip or brew: [install uv](https://docs.astral.sh/uv/getting-started/installation/))
 
 ### Installation
 
@@ -41,9 +41,20 @@ cp .env.example .env
 
 5. **Run the agent**:
 ```bash
-uv run invopop-expert
+uv run python -m src.expert.main
 ```
 
+If you have Python > 3.13, you can also run it in cli from root like this:
+
+Install the package: 
+```bash
+uv pip install -e .
+```
+
+Run it from root:
+```bash
+uv run expert
+```
 
 ## 🛠️ Configuration
 ### Environment Variables (.env)
@@ -63,7 +74,7 @@ Customize the agent behavior by editing `config.yaml`:
 Start a conversation with the agent:
 
 ```bash
-uv run invopop-expert
+uv run expert
 ```
 
 Ask questions like:
@@ -122,4 +133,4 @@ Apache License 2.0 - see LICENSE file for details.
 
 📚 [Invopop Documentation](https://docs.invopop.com/home)
 📚 [GOBL Documentation](https://docs.gobl.org/introduction)
-🐛 Report Issues
+🐛 [Report Issues or unexpected answer](https://github.com/invopop/expert/issues)

@@ -1,5 +1,6 @@
 """Main agent implementation for Invopop Expert."""
 
+from datetime import datetime
 from pathlib import Path
 from typing import Dict, Any
 
@@ -113,7 +114,10 @@ class InvopopExpert:
         print(chat_config.get("input_prompt", "Enter your question:"))
         print("-" * 70)
 
-        thread_config = {"configurable": {"thread_id": "1"}}
+        # Create a thread id based on the current date and time
+        thread_id = datetime.now().strftime("%Y%m%d%H%M%S")
+
+        thread_config = {"configurable": {"thread_id": thread_id}}
 
         while True:
             try:

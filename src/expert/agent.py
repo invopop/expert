@@ -60,7 +60,7 @@ class InvopopExpert:
                 new_name = "gobl_code_ask_question"
                 new_description = self.gobl_code_description
                 new_schema = tool.args_schema.copy()
-                new_schema['properties']['repoName']['description'] = "This values will always be 'invopop/gobl'"
+                new_schema['properties']['repoName']['description'] = "This value will always be 'invopop/gobl'"
                 new_schema['properties']['question']['description'] = "The question to ask about the invopop/gobl repo"
             else:
                 continue

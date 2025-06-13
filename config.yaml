@@ -2,10 +2,13 @@
 llm:
   provider: "openai"
   model: "gpt-4.1-2025-04-14"
-  temperature: 0
+  temperature: 0.1
 
 mcp:
   servers:
+    deepwiki:
+      url: "https://mcp.deepwiki.com/sse"
+      transport: "sse"
     invopop:
       command: "node"
       args: ["~/.mcp/invopop/src/index.js"]
@@ -16,6 +19,6 @@ mcp:
       transport: "stdio"
 
 chat:
-  welcome_message: "Welcome to Invopop Expert! Ask questions about GOBL and Invopop (type 'exit' to quit)"
+  welcome_message: "Welcome to Invopop Expert! Ask questions about GOBL, Invopop and the invopop/gobl library (type 'exit' to quit)"
   input_prompt: "Enter your multi-line question. Press Enter on an empty line to send."
   max_history: 50

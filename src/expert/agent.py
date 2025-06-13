@@ -26,14 +26,17 @@ class InvopopExpert:
         """Load prompt templates from files."""
         prompts_dir = Path(__file__).parent / "prompts"
 
-        with open(prompts_dir / "system_prompt.txt", "r") as f:
+        with open(prompts_dir / "system_prompt.md", "r") as f:
             self.system_prompt = f.read().strip()
 
-        with open(prompts_dir / "invopop_docs_description.txt", "r") as f:
+        with open(prompts_dir / "invopop_docs_description.md", "r") as f:
             self.invopop_docs_description = f.read().strip()
 
-        with open(prompts_dir / "gobl_docs_description.txt", "r") as f:
+        with open(prompts_dir / "gobl_docs_description.md", "r") as f:
             self.gobl_docs_description = f.read().strip()
+
+        with open(prompts_dir / "gobl_code_description.md", "r") as f:
+            self.gobl_code_description = f.read().strip()
 
     async def setup(self):
         """Initialize the MCP client and create the agent."""
@@ -48,20 +51,26 @@ class InvopopExpert:
             if "invopop" in tool.description.lower():
                 new_name = "invopop_search"
                 new_description = self.invopop_docs_description
+                new_schema = tool.args_schema
             elif "gobl" in tool.description.lower():
                 new_name = "gobl_search"
                 new_description = self.gobl_docs_description
+                new_schema = tool.args_schema
+            elif tool.name == "ask_question":
+                new_name = "gobl_code_ask_question"
+                new_description = self.gobl_code_description
+                new_schema = tool.args_schema.copy()
+                new_schema['properties']['repoName']['description'] = "This value will always be 'invopop/gobl'"
+                new_schema['properties']['question']['description'] = "The question to ask about the invopop/gobl repo"
             else:
-                new_name = tool.name
-                new_description = tool.description
-
+                continue
             # Create a new StructuredTool with the new name
             renamed_tool = StructuredTool.from_function(
                 coroutine=tool.coroutine,
                 name=new_name,
                 description=new_description,
                 response_format=tool.response_format,
-                args_schema=tool.args_schema,
+                args_schema=new_schema,
             )
             renamed_tools.append(renamed_tool)
 
@@ -99,6 +108,11 @@ class InvopopExpert:
                                     "🔍 Searching GOBL docs:",
                                    tool_call["function"]["arguments"],
                                )
+                            elif func_name == "gobl_code_ask_question":
+                                print(
+                                    "🔍 Searching invopop/gobl repo:",
+                                    tool_call["function"]["arguments"],
+                                )
                     # Update the final message content
                     final_message_content = message.content
 
@@ -138,6 +152,11 @@ class InvopopExpert:
                 if user_input.lower() in ["exit", "quit", "bye"]:
                     print("\n🤖 Goodbye!")
                     break
+                elif user_input.lower() in ["clear"]:
+                    thread_id = datetime.now().strftime("%Y%m%d%H%M%S")
+                    thread_config = {"configurable": {"thread_id": thread_id}}
+                    print("\n🤖 Cleared thread")
+                    continue
 
                 # Get and print agent response
                 print("\n🤖 Thinking...", flush=True)

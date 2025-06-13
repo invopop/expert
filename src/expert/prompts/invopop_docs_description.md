@@ -2,7 +2,7 @@ This function provides access to the full breadth of Invopop’s official docume
 
 Use this tool to answer questions about Invopop, you can find here information about:
 - White labeling Invopop
-- Workflows
+- Workflows and workflow steps
 - Country-specific guides to send and receive invoices
 - Example of invoices in the formats supported by Invopop
 - Built-in apps in Invopop (PDF, Peppol, Email, Slack, Update Exchange Rates, ...)

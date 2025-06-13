@@ -1,6 +1,6 @@
 # Invopop Expert 🤖
 
-An AI agent that helps you with Invopop and GOBL (Go Business Language) documentation and implementation questions.
+An AI agent that helps you with Invopop and GOBL (Go Business Language) documentation and implementation questions. It has access to invopop, gobl docs and the [gobl repo](https://github.com/invopop/gobl)
 
 ## 🚀 Quick Start
 
@@ -87,16 +87,11 @@ Or more complex ones like:
 - "Give me an example of a valid invoice in Verifactu?"
 - "For my case X in greece, what would be the fields required in the invoice and where should they appear?"
 
-In case the result of some prompt is not  as expected, report it as an issue and I will look into it. 
+In case the result of some prompt is not as expected, report it as an issue and we will look into it. 
 
 Type `exit`, `quit`, or `bye` to end the session.
 
-### Command Line Options
-```bash
-uv run invopop-expert --help
-uv run invopop-expert --config custom-config.yaml
-uv run invopop-expert --verbose
-```
+Type `clear` to start a new thread.
 
 ## 🧪 Development
 
@@ -113,10 +108,12 @@ uv run ruff check src/
 
 ## 📁 Project Structure
 
+``` bash
 invopop-expert/
 ├── src/invopop_expert/    # Main package
 ├── config.yaml            # Configuration
 └── scripts/               # Installation scripts
+```
 
 ## 🤝 Contributing
 

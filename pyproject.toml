@@ -1,7 +1,7 @@
 [project]
 name = "expert"
 version = "0.1.0"
-description = "Add your description here"
+description = "Invopop Expert - AI agent library for Invopop and GOBL documentation"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [

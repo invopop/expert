@@ -16,6 +16,19 @@ dependencies = [
 [project.scripts]
 expert = "expert.main:cli"
 
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-dir]
+"" = "src"
+
+[tool.setuptools.package-data]
+expert = ["prompts/*.md"]
+
 [tool.ruff]
 line-length = 88
 target-version = "py313"

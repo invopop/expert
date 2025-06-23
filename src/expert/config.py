@@ -42,16 +42,16 @@ class Config:
         """Validate required environment variables."""
         if not os.getenv("OPENAI_API_KEY"):
             raise ValueError("OPENAI_API_KEY environment variable is required")
-        
+
         # Opik configuration - check if either env vars are set or opik is configured
         opik_api_key = os.getenv("OPIK_API_KEY")
-        opik_workspace = os.getenv("OPIK_WORKSPACE")
-        
-        if not opik_api_key: # or not opik_workspace:
+
+        if not opik_api_key:
             # Inform about Opik configuration options
-            print("ℹ️  Opik tracing is not configured. This is optional but enables tracking of agent interactions.")
+            print("ℹ️  Opik tracing is not configured.")
+            print("   This is optional but enables tracking of agent interactions.")
             print("   To enable Opik tracing, you can:")
-            print("   1. Set OPIK_API_KEY and OPIK_WORKSPACE environment variables")
+            print("   1. Set OPIK_API_KEY environment variable")
             print("   2. Run 'opik configure' to set up Opik configuration")
 
     @property

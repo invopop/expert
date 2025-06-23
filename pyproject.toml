@@ -13,6 +13,13 @@ dependencies = [
     "langgraph-prebuilt>=0.2.2",
 ]
 
+[project.optional-dependencies]
+dev = [
+    "black>=24.0.0",
+    "ruff>=0.6.0",
+    "twine>=5.0.0",
+]
+
 [project.scripts]
 expert = "expert.main:cli"
 

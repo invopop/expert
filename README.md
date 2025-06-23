@@ -20,6 +20,8 @@ An AI-powered agent library for answering questions about Invopop and GOBL docum
 
 ### Installation
 
+> **Note**: This project uses `uv` for dependency management. If you don't have `uv` installed, you can install it with `pip install uv` or use `pipx` for isolated installation.
+
 1. **Install MCP servers** (required for documentation search):
    ```bash
    npx mint-mcp add invopop
@@ -28,6 +30,15 @@ An AI-powered agent library for answering questions about Invopop and GOBL docum
 
 2. **Install the package**:
    ```bash
+   # Option 1: Development installation (recommended)
+   git clone https://github.com/invopop/expert.git
+   cd expert
+   uv pip install -e .
+   
+   # Option 2: Using pipx (installs in isolated environment)
+   pipx install git+https://github.com/invopop/expert.git
+   
+   # Option 3: Direct installation with pip
    pip install git+https://github.com/invopop/expert.git
    ```
 
@@ -38,7 +49,17 @@ An AI-powered agent library for answering questions about Invopop and GOBL docum
 
 4. **Run the CLI**:
    ```bash
+   # If using development installation (Option 1)
+   uv run expert
+   
+   # If using pipx installation (Option 2)
    expert
+   
+   # If using pip installation (Option 3)
+   expert
+   
+   # Alternative: Run directly without activation (works for all options)
+   python -m expert.main
    ```
 
 ## CLI Usage
@@ -151,36 +172,6 @@ async def ask_question(question: str):
     return {"answer": response}
 ```
 
-### Building a Slack Bot
-
-```python
-# See our example Slack bot implementation:
-# https://github.com/your-org/invopop-expert-slack
-```
-
-### Building a Discord Bot
-
-```python
-import discord
-from expert import InvopopExpert, Config
-
-class ExpertBot(discord.Client):
-    def __init__(self):
-        super().__init__()
-        self.expert = InvopopExpert(Config())
-    
-    async def on_ready(self):
-        await self.expert.setup()
-    
-    async def on_message(self, message):
-        if message.author == self.user:
-            return
-            
-        thread_config = {"configurable": {"thread_id": f"discord-{message.author.id}"}}
-        response = await self.expert.get_response(message.content, thread_config)
-        await message.reply(response)
-```
-
 ## Architecture
 
 - **LangChain + LangGraph**: AI agent framework with memory and tools
@@ -222,7 +213,10 @@ src/expert/
 
 3. **Install dependencies**:
    ```bash
+   # Install uv if not already installed
    pip install uv
+   
+   # Install the package in development mode
    uv pip install -e .
    ```
 
@@ -233,6 +227,13 @@ src/expert/
 
 5. **Run the CLI**:
    ```bash
+   # Activate the virtual environment created by uv
+   source .venv/bin/activate
+   
+   # Run the CLI
+   expert
+   
+   # Or run directly without activating the venv
    python -m expert.main
    ```
 
@@ -261,6 +262,19 @@ ruff check src/
 
 ### Common Issues
 
+**Command 'expert' not found:**
+```bash
+# If using development installation, activate the virtual environment
+source .venv/bin/activate
+expert
+
+# Or run directly as a Python module
+python -m expert.main
+
+# If using pipx, ensure pipx bin directory is in your PATH
+export PATH="$HOME/.local/bin:$PATH"
+```
+
 **MCP servers not found:**
 ```bash
 npx mint-mcp add invopop
@@ -272,8 +286,9 @@ npx mint-mcp add gobl
 - Check that you're using a supported model
 
 **Import errors:**
-- Ensure you've installed the package: `pip install -e .`
-- Check that all dependencies are installed: `uv pip install -r pyproject.toml`
+- Ensure you've installed the package: `uv pip install -e .` or `pip install -e .`
+- Check that all dependencies are installed
+- Try reinstalling: `uv pip install -e . --force-reinstall`
 
 ### Getting Help
 
@@ -284,10 +299,3 @@ npx mint-mcp add gobl
 ## License
 
 See [LICENSE](LICENSE) file for details.
-
----
-
-**Want to build integrations?** Check out our [integration examples](#integration-examples) above, or see our example implementations:
-- [Slack Bot Template](https://github.com/your-org/invopop-expert-slack) 
-- [Discord Bot Template](https://github.com/your-org/invopop-expert-discord)
-- [Web API Template](https://github.com/your-org/invopop-expert-api)

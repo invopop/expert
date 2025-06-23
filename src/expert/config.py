@@ -1,16 +1,17 @@
 """Configuration management for Invopop Expert."""
 
 import os
-import yaml
 from pathlib import Path
-from typing import Dict, Any, Optional
+from typing import Any
+
+import yaml
 from dotenv import load_dotenv
 
 
 class Config:
     """Configuration manager for Invopop Expert."""
 
-    def __init__(self, config_path: Optional[str] = None):
+    def __init__(self, config_path: str | None = None):
         """Initialize configuration."""
         # Load environment variables
         load_dotenv()
@@ -25,15 +26,17 @@ class Config:
         # Validate required environment variables
         self._validate_env_vars()
 
-    def _load_config(self) -> Dict[str, Any]:
+    def _load_config(self) -> dict[str, Any]:
         """Load configuration from YAML file."""
         try:
-            with open(self.config_path, "r") as f:
+            with open(self.config_path) as f:
                 return yaml.safe_load(f)
-        except FileNotFoundError:
-            raise FileNotFoundError(f"Configuration file not found: {self.config_path}")
+        except FileNotFoundError as e:
+            raise FileNotFoundError(
+                f"Configuration file not found: {self.config_path}"
+            ) from e
         except yaml.YAMLError as e:
-            raise ValueError(f"Invalid YAML configuration: {e}")
+            raise ValueError(f"Invalid YAML configuration: {e}") from e
 
     def _validate_env_vars(self):
         """Validate required environment variables."""
@@ -46,12 +49,12 @@ class Config:
         return os.getenv("OPENAI_API_KEY")
 
     @property
-    def llm_config(self) -> Dict[str, Any]:
+    def llm_config(self) -> dict[str, Any]:
         """Get LLM configuration."""
         return self.config.get("llm", {})
 
     @property
-    def mcp_config(self) -> Dict[str, Any]:
+    def mcp_config(self) -> dict[str, Any]:
         """Get MCP server configuration."""
         config = self.config.get("mcp", {}).get("servers", {})
 
@@ -74,6 +77,6 @@ class Config:
         return config
 
     @property
-    def chat_config(self) -> Dict[str, Any]:
+    def chat_config(self) -> dict[str, Any]:
         """Get chat configuration."""
         return self.config.get("chat", {})

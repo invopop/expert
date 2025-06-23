@@ -1,0 +1,56 @@
+name: Pre-commit Checks
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  pre-commit:
+    runs-on: ubuntu-latest
+    name: Code Quality Gate
+    
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.13"
+
+    - name: Install UV
+      uses: astral-sh/setup-uv@v3
+      with:
+        enable-cache: true
+
+    - name: Install dependencies
+      run: uv sync --extra dev
+
+    - name: Check Ruff linting
+      id: ruff-lint
+      run: |
+        echo "Running Ruff linting..."
+        if ! uv run ruff check .; then
+          echo "❌ Linting issues found!"
+          echo "Run 'uv run ruff check --fix .' to fix auto-fixable issues."
+          exit 1
+        else
+          echo "✅ No linting issues found!"
+        fi
+
+    - name: Check Ruff formatting
+      id: ruff-format
+      run: |
+        echo "Checking Ruff formatting..."
+        if ! uv run ruff format --check .; then
+          echo "❌ Format issues found!"
+          echo "Run 'uv run ruff format .' to fix formatting issues."
+          exit 1
+        else
+          echo "✅ Code format is correct!"
+        fi
+
+    - name: Success
+      if: success()
+      run: |
+        echo "🎉 All code quality checks passed!"
+        echo "Your code meets the quality standards." 

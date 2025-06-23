@@ -2,12 +2,12 @@
 
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, Any
+from typing import Any
 
-from langchain_mcp_adapters.client import MultiServerMCPClient
-from langgraph.prebuilt import create_react_agent
 from langchain_core.tools import StructuredTool
+from langchain_mcp_adapters.client import MultiServerMCPClient
 from langgraph.checkpoint.memory import InMemorySaver
+from langgraph.prebuilt import create_react_agent
 
 from .config import Config
 
@@ -26,16 +26,16 @@ class InvopopExpert:
         """Load prompt templates from files."""
         prompts_dir = Path(__file__).parent / "prompts"
 
-        with open(prompts_dir / "system_prompt.md", "r") as f:
+        with open(prompts_dir / "system_prompt.md") as f:
             self.system_prompt = f.read().strip()
 
-        with open(prompts_dir / "invopop_docs_description.md", "r") as f:
+        with open(prompts_dir / "invopop_docs_description.md") as f:
             self.invopop_docs_description = f.read().strip()
 
-        with open(prompts_dir / "gobl_docs_description.md", "r") as f:
+        with open(prompts_dir / "gobl_docs_description.md") as f:
             self.gobl_docs_description = f.read().strip()
 
-        with open(prompts_dir / "gobl_code_description.md", "r") as f:
+        with open(prompts_dir / "gobl_code_description.md") as f:
             self.gobl_code_description = f.read().strip()
 
     async def setup(self):
@@ -60,8 +60,12 @@ class InvopopExpert:
                 new_name = "gobl_code_ask_question"
                 new_description = self.gobl_code_description
                 new_schema = tool.args_schema.copy()
-                new_schema['properties']['repoName']['description'] = "This value will always be 'invopop/gobl'"
-                new_schema['properties']['question']['description'] = "The question to ask about the invopop/gobl repo"
+                new_schema["properties"]["repoName"]["description"] = (
+                    "This value will always be 'invopop/gobl'"
+                )
+                new_schema["properties"]["question"]["description"] = (
+                    "The question to ask about the invopop/gobl repo"
+                )
             else:
                 continue
             # Create a new StructuredTool with the new name
@@ -76,7 +80,9 @@ class InvopopExpert:
 
         # Create the agent
         llm_config = self.config.llm_config
-        model_name = f"{llm_config.get('provider', 'openai')}:{llm_config.get('model', 'gpt-4.1')}"
+        provider = llm_config.get("provider", "openai")
+        model = llm_config.get("model", "gpt-4.1")
+        model_name = f"{provider}:{model}"
 
         self.agent = create_react_agent(
             model_name,
@@ -85,7 +91,7 @@ class InvopopExpert:
             prompt=self.system_prompt,
         )
 
-    async def get_response(self, user_input: str, config: Dict[str, Any]) -> str:
+    async def get_response(self, user_input: str, config: dict[str, Any]) -> str:
         """Get response from the agent for a given input."""
         if not self.agent:
             raise RuntimeError("Agent not initialized. Call setup() first.")
@@ -106,8 +112,8 @@ class InvopopExpert:
                             elif func_name == "gobl_search":
                                 print(
                                     "🔍 Searching GOBL docs:",
-                                   tool_call["function"]["arguments"],
-                               )
+                                    tool_call["function"]["arguments"],
+                                )
                             elif func_name == "gobl_code_ask_question":
                                 print(
                                     "🔍 Searching invopop/gobl repo:",

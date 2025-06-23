@@ -5,8 +5,8 @@ import sys
 
 import click
 
-from .config import Config
 from .agent import InvopopExpert
+from .config import Config
 
 
 @click.command()

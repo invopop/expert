@@ -15,7 +15,10 @@ Example usage:
         await expert.setup()
 
         thread_config = {"configurable": {"thread_id": "my-conversation"}}
-        response = await expert.get_response("How do I create an invoice?", thread_config)
+        response = await expert.get_response(
+            "How do I create an invoice?",
+            thread_config
+        )
         print(response)
 
     asyncio.run(main())

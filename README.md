@@ -44,7 +44,12 @@ An AI-powered agent library for answering questions about Invopop and GOBL docum
 
 3. **Set up environment variables**:
    ```bash
-   export OPENAI_API_KEY=your_openai_api_key
+   # Copy the example environment file and edit it with your values
+   cp .env.example .env
+   
+   # Edit .env file with your API keys
+   # Then source it or restart your terminal
+   source .env
    ```
 
 4. **Run the CLI**:
@@ -125,6 +130,9 @@ llm:
   model: "gpt-4.1-2025-04-14"
   temperature: 0.1
 
+opik:
+  project_name: "invopop-expert"
+
 # MCP Server Configuration  
 mcp:
   servers:
@@ -146,9 +154,37 @@ chat:
 
 ### Environment Variables
 
+You can configure the application using environment variables. Copy the example file and customize it:
+
+```bash
+cp .env.example .env
+# Edit .env with your values, then source it:
+source .env
+```
+
+**Available Variables:**
 - `OPENAI_API_KEY` (required): Your OpenAI API key
+- `OPIK_API_KEY` (optional): Your Opik API key for conversation tracing
+- `OPIK_WORKSPACE` (optional): Your Opik workspace name for conversation tracing
 - `INVOPOP_MCP_PATH` (optional): Custom path to Invopop MCP server
 - `GOBL_MCP_PATH` (optional): Custom path to GOBL MCP server
+
+### Opik Tracing Setup
+
+Invopop Expert supports optional conversation tracing with [Opik](https://opik.vercel.app/) for monitoring and analytics. You have two setup options:
+
+**Option 1: Environment Variables**
+```bash
+export OPIK_API_KEY=your_opik_api_key
+export OPIK_WORKSPACE=your_opik_workspace
+```
+
+**Option 2: Interactive Configuration**
+```bash
+opik configure
+```
+
+If neither option is configured, the agent will run normally but without tracing capabilities.
 
 ## Integration Examples
 
@@ -222,7 +258,10 @@ src/expert/
 
 4. **Set environment variables**:
    ```bash
-   export OPENAI_API_KEY=your_api_key
+   # Copy and configure environment variables
+   cp .env.example .env
+   # Edit .env file with your API keys, then source it
+   source .env
    ```
 
 5. **Run the CLI**:

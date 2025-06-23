@@ -4,6 +4,9 @@ llm:
   model: "gpt-4.1-2025-04-14"
   temperature: 0.1
 
+opik:
+  project_name: "invopop-expert"
+
 mcp:
   servers:
     deepwiki:

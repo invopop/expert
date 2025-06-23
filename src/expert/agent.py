@@ -9,6 +9,8 @@ from langchain_mcp_adapters.client import MultiServerMCPClient
 from langgraph.checkpoint.memory import InMemorySaver
 from langgraph.prebuilt import create_react_agent
 
+from opik.integrations.langchain import OpikTracer
+
 from .config import Config
 
 
@@ -90,6 +92,20 @@ class InvopopExpert:
             checkpointer=self.checkpointer,
             prompt=self.system_prompt,
         )
+        
+        # Initialize Opik tracer if configured
+        if self.config.opik_api_key:
+            opik_config = self.config.opik_config
+            project_name = opik_config.get("project_name", "invopop-expert")
+            
+            self.tracer = OpikTracer(
+                graph=self.agent.get_graph(xray=True),
+                project_name=project_name
+            )
+            print(f"✅ Opik tracing enabled for project: {project_name}")
+        else:
+            self.tracer = None
+            print("⚠️  Opik tracing disabled - missing API key or workspace configuration")
 
     async def get_response(self, user_input: str, config: dict[str, Any]) -> str:
         """Get response from the agent for a given input."""
@@ -137,7 +153,13 @@ class InvopopExpert:
         # Create a thread id based on the current date and time
         thread_id = datetime.now().strftime("%Y%m%d%H%M%S")
 
-        thread_config = {"configurable": {"thread_id": thread_id}}
+        thread_config = {
+            "configurable": {"thread_id": thread_id},
+        }
+        
+        # Add tracer callback if available
+        if self.tracer:
+            thread_config["callbacks"] = [self.tracer]
 
         while True:
             try:
@@ -161,6 +183,9 @@ class InvopopExpert:
                 elif user_input.lower() in ["clear"]:
                     thread_id = datetime.now().strftime("%Y%m%d%H%M%S")
                     thread_config = {"configurable": {"thread_id": thread_id}}
+                    # Add tracer callback if available
+                    if self.tracer:
+                        thread_config["callbacks"] = [self.tracer]
                     print("\n🤖 Cleared thread")
                     continue
 

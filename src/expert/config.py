@@ -32,7 +32,9 @@ class Config:
             with open(self.config_path) as f:
                 return yaml.safe_load(f)
         except FileNotFoundError as e:
-            raise FileNotFoundError(f"Configuration file not found: {self.config_path}") from e # noqa: E501
+            raise FileNotFoundError(
+                f"Configuration file not found: {self.config_path}"
+            ) from e
         except yaml.YAMLError as e:
             raise ValueError(f"Invalid YAML configuration: {e}") from e
 

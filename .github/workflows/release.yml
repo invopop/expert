@@ -88,7 +88,6 @@ jobs:
     - name: Run pre-commit checks
       run: |
         echo "Running code quality checks..."
-        uv run black --check .
         uv run ruff check .
         uv run ruff format --check .
 

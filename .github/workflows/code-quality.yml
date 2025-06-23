@@ -30,10 +30,6 @@ jobs:
       run: |
         uv sync --extra dev
 
-    - name: Run Black (Format Check)
-      run: |
-        uv run black --check --diff .
-      
     - name: Run Ruff (Linting)
       run: |
         uv run ruff check .

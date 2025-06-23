@@ -25,18 +25,6 @@ jobs:
     - name: Install dependencies
       run: uv sync --extra dev
 
-    - name: Check Black formatting
-      id: black-check
-      run: |
-        echo "Checking code formatting with Black..."
-        if ! uv run black --check --quiet .; then
-          echo "❌ Code formatting issues found!"
-          echo "Run 'uv run black .' to fix formatting issues."
-          exit 1
-        else
-          echo "✅ Code formatting is correct!"
-        fi
-
     - name: Check Ruff linting
       id: ruff-lint
       run: |

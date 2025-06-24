@@ -105,13 +105,21 @@ class InvopopExpert:
             self.tracer = None
             print("⚠️  Opik tracing disabled - missing API key")
 
-    async def get_response(self, user_input: str, config: dict[str, Any]) -> str:
+    async def get_response(self, user_input: str, thread_id: str) -> str:
         """Get response from the agent for a given input."""
         if not self.agent:
             raise RuntimeError("Agent not initialized. Call setup() first.")
+        
+        thread_config = {
+            "configurable": {"thread_id": thread_id},
+        }
+
+        # Add tracer callback if available
+        if self.tracer:
+            thread_config["callbacks"] = [self.tracer]
 
         async for chunk in self.agent.astream(
-            {"messages": [{"role": "user", "content": user_input}]}, config
+            {"messages": [{"role": "user", "content": user_input}]}, thread_config
         ):
             if "agent" in chunk:
                 for message in chunk["agent"]["messages"]:
@@ -151,14 +159,6 @@ class InvopopExpert:
         # Create a thread id based on the current date and time
         thread_id = datetime.now().strftime("%Y%m%d%H%M%S")
 
-        thread_config = {
-            "configurable": {"thread_id": thread_id},
-        }
-
-        # Add tracer callback if available
-        if self.tracer:
-            thread_config["callbacks"] = [self.tracer]
-
         while True:
             try:
                 # Get user input
@@ -180,16 +180,12 @@ class InvopopExpert:
                     break
                 elif user_input.lower() in ["clear"]:
                     thread_id = datetime.now().strftime("%Y%m%d%H%M%S")
-                    thread_config = {"configurable": {"thread_id": thread_id}}
-                    # Add tracer callback if available
-                    if self.tracer:
-                        thread_config["callbacks"] = [self.tracer]
                     print("\n🤖 Cleared thread")
                     continue
 
                 # Get and print agent response
                 print("\n🤖 Thinking...", flush=True)
-                response = await self.get_response(user_input, thread_config)
+                response = await self.get_response(user_input, thread_id)
                 print(f"\n🤖 Assistant: {response}")
 
             except KeyboardInterrupt:

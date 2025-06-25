@@ -62,7 +62,13 @@ class Config:
     @property
     def opik_config(self) -> dict[str, Any]:
         """Get Opik configuration."""
-        return self.config.get("opik", {})
+        config = self.config.get("opik", {})
+
+        opik_project_name = os.getenv("OPIK_PROJECT_NAME")
+        if opik_project_name:
+            config["project_name"] = opik_project_name
+
+        return config
 
     @property
     def llm_config(self) -> dict[str, Any]:

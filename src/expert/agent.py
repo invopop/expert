@@ -2,7 +2,6 @@
 
 from datetime import datetime
 from pathlib import Path
-from typing import Any
 
 from langchain_core.tools import StructuredTool
 from langchain_mcp_adapters.client import MultiServerMCPClient
@@ -109,7 +108,7 @@ class InvopopExpert:
         """Get response from the agent for a given input."""
         if not self.agent:
             raise RuntimeError("Agent not initialized. Call setup() first.")
-        
+
         thread_config = {
             "configurable": {"thread_id": thread_id},
         }

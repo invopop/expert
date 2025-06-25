@@ -95,24 +95,22 @@ class InvopopExpert:
         # Store Opik configuration if configured
         if self.config.opik_api_key:
             self.opik_config = self.config.opik_config
-            print(f"✅ Opik tracing enabled for project: {self.opik_config.get('project_name', 'invopop-expert')}")
+            project_name = self.opik_config.get("project_name", "invopop-expert")
+            print(f"✅ Opik tracing enabled for project: {project_name}")
         else:
             self.opik_config = None
             print("⚠️  Opik tracing disabled - missing API key")
-
 
     def _create_opik_tracer(self, user_thread_id: str) -> OpikTracer | None:
         """Create a new OpikTracer instance for the given thread_id."""
         if not self.opik_config:
             return None
-        
+
         project_name = self.opik_config.get("project_name", "invopop-expert")
-        
+
         # Create tracer with user thread_id in metadata for proper thread tracking
         tracer = OpikTracer(
-            graph=self.agent.get_graph(xray=True), 
-            project_name=project_name,
-            tags=[user_thread_id]
+            graph=self.agent.get_graph(xray=True), project_name=project_name, tags=[user_thread_id]
         )
         return tracer
 

@@ -43,10 +43,32 @@ class Config:
         if not os.getenv("OPENAI_API_KEY"):
             raise ValueError("OPENAI_API_KEY environment variable is required")
 
+        # Opik configuration - check if either env vars are set or opik is configured
+        opik_api_key = os.getenv("OPIK_API_KEY")
+
+        if not opik_api_key:
+            # Inform about Opik configuration options
+            print("ℹ️  Opik tracing is not configured.")
+            print("   This is optional but enables tracking of agent interactions.")
+            print("   To enable Opik tracing, you can:")
+            print("   1. Set OPIK_API_KEY environment variable")
+            print("   2. Run 'opik configure' to set up Opik configuration")
+
     @property
-    def openai_api_key(self) -> str:
-        """Get OpenAI API key."""
-        return os.getenv("OPENAI_API_KEY")
+    def opik_api_key(self) -> str | None:
+        """Get Opik API key."""
+        return os.getenv("OPIK_API_KEY")
+
+    @property
+    def opik_config(self) -> dict[str, Any]:
+        """Get Opik configuration."""
+        config = self.config.get("opik", {})
+
+        opik_project_name = os.getenv("OPIK_PROJECT_NAME")
+        if opik_project_name:
+            config["project_name"] = opik_project_name
+
+        return config
 
     @property
     def llm_config(self) -> dict[str, Any]:

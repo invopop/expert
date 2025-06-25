@@ -32,9 +32,7 @@ class Config:
             with open(self.config_path) as f:
                 return yaml.safe_load(f)
         except FileNotFoundError as e:
-            raise FileNotFoundError(
-                f"Configuration file not found: {self.config_path}"
-            ) from e
+            raise FileNotFoundError(f"Configuration file not found: {self.config_path}") from e
         except yaml.YAMLError as e:
             raise ValueError(f"Invalid YAML configuration: {e}") from e
 
@@ -92,9 +90,7 @@ class Config:
         # Expand home directory paths
         for server_config in config.values():
             if "args" in server_config:
-                server_config["args"] = [
-                    os.path.expanduser(arg) for arg in server_config["args"]
-                ]
+                server_config["args"] = [os.path.expanduser(arg) for arg in server_config["args"]]
 
         return config
 

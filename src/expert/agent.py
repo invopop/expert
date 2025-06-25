@@ -21,6 +21,7 @@ class InvopopExpert:
         self.agent = None
         self.checkpointer = InMemorySaver()
         self._load_prompts()
+        self.opik_config = None
 
     def _load_prompts(self):
         """Load prompt templates from files."""
@@ -91,18 +92,27 @@ class InvopopExpert:
             prompt=self.system_prompt,
         )
 
-        # Initialize Opik tracer if configured
+        # Store Opik configuration if configured
         if self.config.opik_api_key:
-            opik_config = self.config.opik_config
-            project_name = opik_config.get("project_name", "invopop-expert")
-
-            self.tracer = OpikTracer(
-                graph=self.agent.get_graph(xray=True), project_name=project_name
-            )
+            self.opik_config = self.config.opik_config
+            project_name = self.opik_config.get("project_name", "invopop-expert")
             print(f"✅ Opik tracing enabled for project: {project_name}")
         else:
-            self.tracer = None
+            self.opik_config = None
             print("⚠️  Opik tracing disabled - missing API key")
+
+    def _create_opik_tracer(self, user_thread_id: str) -> OpikTracer | None:
+        """Create a new OpikTracer instance for the given thread_id."""
+        if not self.opik_config:
+            return None
+
+        project_name = self.opik_config.get("project_name", "invopop-expert")
+
+        # Create tracer with user thread_id in metadata for proper thread tracking
+        tracer = OpikTracer(
+            graph=self.agent.get_graph(xray=True), project_name=project_name, tags=[user_thread_id]
+        )
+        return tracer
 
     async def get_response(self, user_input: str, thread_id: str) -> str:
         """Get response from the agent for a given input."""
@@ -113,9 +123,11 @@ class InvopopExpert:
             "configurable": {"thread_id": thread_id},
         }
 
-        # Add tracer callback if available
-        if self.tracer:
-            thread_config["callbacks"] = [self.tracer]
+        # Create a new tracer instance for this conversation
+        # The tracer uses the original thread_id in metadata for proper Opik thread tracking
+        tracer = self._create_opik_tracer(thread_id)
+        if tracer:
+            thread_config["callbacks"] = [tracer]
 
         async for chunk in self.agent.astream(
             {"messages": [{"role": "user", "content": user_input}]}, thread_config

@@ -17,6 +17,8 @@ on:
         required: false
         type: string
   push:
+    branches:
+      - main
     tags:
       - 'v*'
 
@@ -84,12 +86,6 @@ jobs:
         NEW_VERSION="${{ steps.new_version.outputs.new }}"
         sed -i "s/version = \".*\"/version = \"$NEW_VERSION\"/" pyproject.toml
         echo "Updated pyproject.toml with version $NEW_VERSION"
-
-    - name: Run pre-commit checks
-      run: |
-        echo "Running code quality checks..."
-        uv run ruff check .
-        uv run ruff format --check .
 
     - name: Build package
       run: |

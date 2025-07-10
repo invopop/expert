@@ -11,6 +11,8 @@ from opik.integrations.langchain import OpikTracer
 
 from .config import Config
 
+import json
+
 AVAILABLE_REPOS = [
     "invopop/gobl",
     "invopop/gobl.verifactu",
@@ -161,8 +163,8 @@ class InvopopExpert:
                             elif func_name == "gobl_code_ask_question":
                                 args = tool_call["function"]["arguments"]
                                 if isinstance(args, str):
-                                    import json
                                     args = json.loads(args)
+                                
                                 repo_name = args.get("repoName", "unknown")
                                 print(
                                     f"🔍 Searching {repo_name} repo:",

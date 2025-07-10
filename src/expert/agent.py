@@ -1,5 +1,6 @@
 """Main agent implementation for Invopop Expert."""
 
+import json
 from datetime import datetime
 from pathlib import Path
 
@@ -10,8 +11,6 @@ from langgraph.prebuilt import create_react_agent
 from opik.integrations.langchain import OpikTracer
 
 from .config import Config
-
-import json
 
 AVAILABLE_REPOS = [
     "invopop/gobl",
@@ -164,7 +163,7 @@ class InvopopExpert:
                                 args = tool_call["function"]["arguments"]
                                 if isinstance(args, str):
                                     args = json.loads(args)
-                                
+
                                 repo_name = args.get("repoName", "unknown")
                                 print(
                                     f"🔍 Searching {repo_name} repo:",

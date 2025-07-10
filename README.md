@@ -2,7 +2,7 @@
 
 An AI-powered agent library for answering questions about Invopop and GOBL documentation using LangChain and MCP (Model Context Protocol) servers.
 
-It has access as well to the following repos:
+It also has access to the following repositories:
 - [gobl](https://github.com/invopop/gobl)
 - [gobl.verifactu](https://github.com/invopop/gobl.verifactu)
 - [gobl.fatturapa](https://github.com/invopop/gobl.fatturapa)

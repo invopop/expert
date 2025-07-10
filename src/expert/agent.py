@@ -11,7 +11,14 @@ from opik.integrations.langchain import OpikTracer
 
 from .config import Config
 
-AVAILABLE_REPOS = ["invopop/gobl", "invopop/gobl.verifactu", "invopop/gobl.ubl", "invopop/gobl.fatturapa", "invopop/gobl.cfdi", "invopop/gobl.cii"]
+AVAILABLE_REPOS = [
+    "invopop/gobl",
+    "invopop/gobl.verifactu",
+    "invopop/gobl.ubl",
+    "invopop/gobl.fatturapa",
+    "invopop/gobl.cfdi",
+    "invopop/gobl.cii",
+]
 
 
 class InvopopExpert:

@@ -1,7 +1,7 @@
 # Invopop Expert Configuration
 llm:
   provider: "openai"
-  model: "gpt-4.1-2025-04-14"
+  model: "gpt-4.1"
   temperature: 0.1
 
 opik:

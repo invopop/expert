@@ -1,5 +1,6 @@
 """Main agent implementation for Invopop Expert."""
 
+import json
 from datetime import datetime
 from pathlib import Path
 
@@ -10,6 +11,15 @@ from langgraph.prebuilt import create_react_agent
 from opik.integrations.langchain import OpikTracer
 
 from .config import Config
+
+AVAILABLE_REPOS = [
+    "invopop/gobl",
+    "invopop/gobl.verifactu",
+    "invopop/gobl.ubl",
+    "invopop/gobl.fatturapa",
+    "invopop/gobl.cfdi",
+    "invopop/gobl.cii",
+]
 
 
 class InvopopExpert:
@@ -22,6 +32,7 @@ class InvopopExpert:
         self.checkpointer = InMemorySaver()
         self._load_prompts()
         self.opik_config = None
+        self.mcp_client = None
 
     def _load_prompts(self):
         """Load prompt templates from files."""
@@ -42,10 +53,10 @@ class InvopopExpert:
     async def setup(self):
         """Initialize the MCP client and create the agent."""
         # Initialize the MultiServerMCPClient
-        client = MultiServerMCPClient(self.config.mcp_config)
+        self.mcp_client = MultiServerMCPClient(self.config.mcp_config)
 
         # Get and rename tools
-        tools = await client.get_tools()
+        tools = await self.mcp_client.get_tools()
         renamed_tools = []
 
         for tool in tools:
@@ -62,10 +73,10 @@ class InvopopExpert:
                 new_description = self.gobl_code_description
                 new_schema = tool.args_schema.copy()
                 new_schema["properties"]["repoName"]["description"] = (
-                    "This value will always be 'invopop/gobl'"
+                    "This value will always be one of the following: " + ", ".join(AVAILABLE_REPOS)
                 )
                 new_schema["properties"]["question"]["description"] = (
-                    "The question to ask about the invopop/gobl repo"
+                    "The question to ask about the repo"
                 )
             else:
                 continue
@@ -90,6 +101,7 @@ class InvopopExpert:
             renamed_tools,
             checkpointer=self.checkpointer,
             prompt=self.system_prompt,
+            version="v2",
         )
 
         # Store Opik configuration if configured
@@ -148,8 +160,13 @@ class InvopopExpert:
                                     tool_call["function"]["arguments"],
                                 )
                             elif func_name == "gobl_code_ask_question":
+                                args = tool_call["function"]["arguments"]
+                                if isinstance(args, str):
+                                    args = json.loads(args)
+
+                                repo_name = args.get("repoName", "unknown")
                                 print(
-                                    "🔍 Searching invopop/gobl repo:",
+                                    f"🔍 Searching {repo_name} repo:",
                                     tool_call["function"]["arguments"],
                                 )
                     # Update the final message content

@@ -112,7 +112,7 @@ class InvopopExpert:
             self.opik_config = None
             print("⚠️  Opik tracing disabled - missing API key")
 
-    def _create_opik_tracer(self, user_thread_id: str) -> OpikTracer | None:
+    def _create_opik_tracer(self) -> OpikTracer | None:
         """Create a new OpikTracer instance for the given thread_id."""
         if not self.opik_config:
             return None
@@ -121,10 +121,10 @@ class InvopopExpert:
 
         # Create tracer with user thread_id in metadata for proper thread tracking
         tracer = OpikTracer(
-            graph=self.agent.get_graph(xray=True), project_name=project_name, tags=[user_thread_id]
+            graph=self.agent.get_graph(xray=True), project_name=project_name
         )
         return tracer
-
+    
     async def get_response(self, user_input: str, thread_id: str) -> str:
         messages = [{"role": "user", "content": user_input}]
         return await self.get_response_with_context(messages, thread_id)
@@ -140,7 +140,7 @@ class InvopopExpert:
 
         # Create a new tracer instance for this conversation
         # The tracer uses the original thread_id in metadata for proper Opik thread tracking
-        tracer = self._create_opik_tracer(thread_id)
+        tracer = self._create_opik_tracer()
         if tracer:
             thread_config["callbacks"] = [tracer]
 

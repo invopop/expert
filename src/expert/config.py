@@ -3,11 +3,11 @@
 import os
 from pathlib import Path
 from typing import Any
-from langgraph.checkpoint.base import BaseCheckpointSaver
-from langgraph.checkpoint.memory import InMemorySaver
 
 import yaml
 from dotenv import load_dotenv
+from langgraph.checkpoint.base import BaseCheckpointSaver
+from langgraph.checkpoint.memory import InMemorySaver
 
 
 class Config:
@@ -100,9 +100,9 @@ class Config:
     def chat_config(self) -> dict[str, Any]:
         """Get chat configuration."""
         return self.config.get("chat", {})
-    
+
     @property
-    def checkpointer(self) -> BaseCheckpointSaver:
+    def checkpointer(self) -> BaseCheckpointSaver | None:
         """Get checkpointer configuration."""
         checkpointer = self.config.get("checkpointer", None)
         match checkpointer:

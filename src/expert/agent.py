@@ -98,7 +98,7 @@ class InvopopExpert:
         self.agent = create_react_agent(
             model_name,
             renamed_tools,
-            checkpointer= checkpointer,
+            checkpointer=checkpointer,
             prompt=self.system_prompt,
             version="v2",
         )
@@ -124,7 +124,7 @@ class InvopopExpert:
             graph=self.agent.get_graph(xray=True), project_name=project_name, tags=[user_thread_id]
         )
         return tracer
-    
+
     async def get_response(self, user_input: str, thread_id: str) -> str:
         messages = [{"role": "user", "content": user_input}]
         return await self.get_response_with_context(messages, thread_id)
@@ -144,9 +144,7 @@ class InvopopExpert:
         if tracer:
             thread_config["callbacks"] = [tracer]
 
-        async for chunk in self.agent.astream(
-            {"messages": messages}, thread_config
-        ):
+        async for chunk in self.agent.astream({"messages": messages}, thread_config):
             if "agent" in chunk:
                 for message in chunk["agent"]["messages"]:
                     if "tool_calls" in message.additional_kwargs:

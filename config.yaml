@@ -27,7 +27,7 @@ chat:
   max_history: 50
 
 vector_store:
-  id: "vs_687a1e549bf0819194bf165bcbbafa3c"
+  id: "" #vector store id
   max_results: 10
   score_threshold: 0.1
   default_filters:

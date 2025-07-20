@@ -102,6 +102,11 @@ class Config:
         return self.config.get("chat", {})
 
     @property
+    def vector_store_config(self) -> dict[str, Any]:
+        """Get vector store configuration."""
+        return self.config.get("vector_store", {})
+
+    @property
     def checkpointer(self) -> BaseCheckpointSaver | None:
         """Get checkpointer configuration."""
         checkpointer = self.config.get("checkpointer", None)

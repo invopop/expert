@@ -25,3 +25,13 @@ chat:
   welcome_message: "Welcome to Invopop Expert! Ask questions about GOBL, Invopop and the invopop/gobl library (type 'exit' to quit)"
   input_prompt: "Enter your multi-line question. Press Enter on an empty line to send."
   max_history: 50
+
+vector_store:
+  id: "vs_687a1e549bf0819194bf165bcbbafa3c"
+  max_results: 10
+  score_threshold: 0.1
+  default_filters:
+    country: "es"  # Spain
+    subject: "verifactu"  # VeriFactu-specific docs
+
+checkpointer: "memory"

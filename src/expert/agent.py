@@ -34,7 +34,7 @@ class InvopopExpert:
         self.mcp_client = None
         self.official_docs_tool = OfficialDocsTool(
             vector_store_id=self.config.vector_store_config["id"],
-            max_results=self.config.vector_store_config.get("max_results", 10)
+            max_results=self.config.vector_store_config.get("max_results", 10),
         )
 
     def _load_prompts(self):

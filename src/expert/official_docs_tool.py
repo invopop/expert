@@ -68,8 +68,8 @@ class OfficialDocsTool:
             results_dict = results.model_dump()
 
             if not results_dict.get("data"):
-                return f"""No relevant documents found for 
-your query with filters (country: {country}, subject: {subject})."""
+                return f"""No relevant documents found for your query with filters
+                (country: {country}, subject: {subject})."""
 
             # Format the results
             formatted_results = []

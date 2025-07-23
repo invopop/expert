@@ -10,6 +10,7 @@ from langgraph.prebuilt import create_react_agent
 from opik.integrations.langchain import OpikTracer
 
 from .config import Config
+from .official_docs_tool import OfficialDocsTool
 
 AVAILABLE_REPOS = [
     "invopop/gobl",
@@ -31,6 +32,10 @@ class InvopopExpert:
         self._load_prompts()
         self.opik_config = None
         self.mcp_client = None
+        self.official_docs_tool = OfficialDocsTool(
+            vector_store_id=self.config.vector_store_config["id"],
+            max_results=self.config.vector_store_config.get("max_results", 10),
+        )
 
     def _load_prompts(self):
         """Load prompt templates from files."""
@@ -87,6 +92,9 @@ class InvopopExpert:
                 args_schema=new_schema,
             )
             renamed_tools.append(renamed_tool)
+
+        # Add the official docs tool
+        renamed_tools.append(self.official_docs_tool.get_tool())
 
         # Create the agent
         llm_config = self.config.llm_config
@@ -168,6 +176,11 @@ class InvopopExpert:
                                 repo_name = args.get("repoName", "unknown")
                                 print(
                                     f"🔍 Searching {repo_name} repo:",
+                                    tool_call["function"]["arguments"],
+                                )
+                            elif func_name == "search_official":
+                                print(
+                                    "🔍 Searching official docs:",
                                     tool_call["function"]["arguments"],
                                 )
                     # Update the final message content
